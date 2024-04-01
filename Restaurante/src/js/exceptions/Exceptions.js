@@ -61,3 +61,5 @@ class ExceptionFactory {
     }
 
 }
+
+export {ExceptionFactory};

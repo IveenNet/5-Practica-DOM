@@ -1,24 +1,26 @@
 'use strict';
 
-function test(restaurantManager) {
+import managerModel  from "../js/models/managerModel.js";
+
+function test(managerModel) {
     console.log('##################################################################');
     console.log('######## Inicio de Pruebas de RestaurantsManager ########');
 
     // Categorías
     console.log('######## Creamos Categorías ########');
-    const tapasCategory = restaurantManager.createCategory('Tapas');
-    const postresCategory = restaurantManager.createCategory('Postres');
-    const principalesCategory = restaurantManager.createCategory('Platos Principales');
+    const tapasCategory = managerModel.createCategory('Tapas');
+    const postresCategory = managerModel.createCategory('Postres');
+    const principalesCategory = managerModel.createCategory('Platos Principales');
 
     // Alérgenos
     console.log('######## Creamos Alérgenos ########');
-    const glutenAllergen = restaurantManager.createAllergen('Gluten');
-    const lactosaAllergen = restaurantManager.createAllergen('Lactosa');
-    const mariscosAllergen = restaurantManager.createAllergen('Mariscos');
+    const glutenAllergen = managerModel.createAllergen('Gluten');
+    const lactosaAllergen = managerModel.createAllergen('Lactosa');
+    const mariscosAllergen = managerModel.createAllergen('Mariscos');
 
     // Platos
     console.log('######## Creamos Platos ########');
-    const tortillaEspanola = restaurantManager.createDish(
+    const tortillaEspanola = managerModel.createDish(
         'Tortilla Española',
         'Clásica tortilla de patatas con o sin cebolla, según preferencia',
         new Map([['patatas', 500], ['huevos', 6], ['cebolla', 1]]),  // Ingredientes con cantidades
@@ -27,7 +29,7 @@ function test(restaurantManager) {
         new Map()
     );
 
-    const gazpacho = restaurantManager.createDish(
+    const gazpacho = managerModel.createDish(
         'Gazpacho',
         'Refrescante sopa fría de tomate, ideal para el verano',
         new Map([['tomate', 1], ['pimiento', 1], ['pepino', 1], ['ajo', 2]]),
@@ -36,7 +38,7 @@ function test(restaurantManager) {
         new Map().set(glutenAllergen.name, glutenAllergen)
     );
 
-    const paellaValenciana = restaurantManager.createDish(
+    const paellaValenciana = managerModel.createDish(
         'Paella Valenciana',
         'Auténtica paella con pollo, conejo, judías verdes y azafrán',
         new Map([['arroz', 300], ['pollo', 200], ['conejo', 200], ['judías verdes', 100], ['azafrán', '1 pizca']]),
@@ -45,7 +47,7 @@ function test(restaurantManager) {
         new Map().set(mariscosAllergen.name, mariscosAllergen)
     );
 
-    const flanDeHuevo = restaurantManager.createDish(
+    const flanDeHuevo = managerModel.createDish(
         'Flan de Huevo',
         'Suave y cremoso flan de huevo cubierto de caramelo',
         new Map([['huevos', 4], ['leche', 500], ['azúcar', 150]]),
@@ -56,27 +58,27 @@ function test(restaurantManager) {
 
     // Menús
     console.log('######## Creamos Menús ########');
-    const menuTradicional = restaurantManager.createMenu('Menú Tradicional');
-    const menuGourmet = restaurantManager.createMenu('Menú Gourmet');
+    const menuTradicional = managerModel.createMenu('Menú Tradicional');
+    const menuGourmet = managerModel.createMenu('Menú Gourmet');
 
     // Asignar platos a menús
     console.log('######## Asignamos Platos a Menús ########');
-    restaurantManager.assignDishToMenu(menuTradicional, tortillaEspanola);
-    restaurantManager.assignDishToMenu(menuTradicional, gazpacho);
-    restaurantManager.assignDishToMenu(menuGourmet, paellaValenciana);
-    restaurantManager.assignDishToMenu(menuGourmet, flanDeHuevo);
+    managerModel.assignDishToMenu(menuTradicional, tortillaEspanola);
+    managerModel.assignDishToMenu(menuTradicional, gazpacho);
+    managerModel.assignDishToMenu(menuGourmet, paellaValenciana);
+    managerModel.assignDishToMenu(menuGourmet, flanDeHuevo);
 
     // Restaurantes
     console.log('######## Creamos Restaurantes ########');
-    const restauranteCasero = restaurantManager.createRestaurant('Restaurante Casero', 'Disfruta de los sabores de casa en cada bocado', 'Calle Ficticia, 123, Valencia', [menuTradicional]);
-    const restauranteDelMar = restaurantManager.createRestaurant('Restaurante Del Mar', 'Saborea los mejores platos del mar en un ambiente único', 'Avenida del Puerto, 45, Barcelona', [menuGourmet]);
+    const restauranteCasero = managerModel.createRestaurant('Restaurante Casero', 'Disfruta de los sabores de casa en cada bocado', 'Calle Ficticia, 123, Valencia', [menuTradicional]);
+    const restauranteDelMar = managerModel.createRestaurant('Restaurante Del Mar', 'Saborea los mejores platos del mar en un ambiente único', 'Avenida del Puerto, 45, Barcelona', [menuGourmet]);
 
     console.log('---------- FIN DE PRUEBAS DE RestaurantsManager ----------');
 
     console.log('##################################################################');
     console.log('######## Mostrando Todos los Menús Registrados ########');
 
-    for (const menu of restaurantManager.getMenus()) {
+    for (const menu of managerModel.getMenus()) {
         console.log(`Menú: ${menu.name}`);
         console.log('Platos:');
         menu.dishes.forEach(dish => {
@@ -90,5 +92,5 @@ function test(restaurantManager) {
 }
 
 window.onload = function() {
-    test(restaurantManager.getInstance());
+    test(managerModel.getInstance());
 };

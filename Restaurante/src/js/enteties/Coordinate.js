@@ -1,5 +1,7 @@
 'use strict';
 
+import {ExceptionFactory} from "../exceptions/Exceptions.js";
+
 class Coordinate {
 
   #latitude;
@@ -42,6 +44,8 @@ class Coordinate {
   }
 }
 
-Object.defineProperty(Category.prototype, "latitude", { enumerable: true });
-Object.defineProperty(Category.prototype, "longitude", { enumerable: true });
+Object.defineProperty(Coordinate.prototype, "latitude", { enumerable: true });
+Object.defineProperty(Coordinate.prototype, "longitude", { enumerable: true });
+
+export {Coordinate};
 

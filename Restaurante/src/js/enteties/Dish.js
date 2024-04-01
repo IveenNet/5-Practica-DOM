@@ -1,5 +1,8 @@
 'use strict';
 
+import {ExceptionFactory} from "../exceptions/Exceptions.js";
+
+
 class Dish {
 
     #name;
@@ -72,3 +75,5 @@ Object.defineProperty(Dish.prototype, 'image', { enumerable: true });
 Object.defineProperty(Dish.prototype, 'ingredients', { enumerable: true });
 Object.defineProperty(Dish.prototype, 'categories', { enumerable: true });
 Object.defineProperty(Dish.prototype, 'allergens', { enumerable: true });
+
+export {Dish};
