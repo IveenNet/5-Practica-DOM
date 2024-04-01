@@ -138,31 +138,68 @@ class managerController {
     };
 
     handleDishesCategoryList = (name) => {
+
+        this[VIEW].updateBreadcrumb([
+            { name: 'Inicio', link: '#' },
+            { name: 'Categorías', link: '#categorias' },
+            { name: name }
+        ]);
+
         this[VIEW].displayDishesByCategory(this[MODEL].getDishesInCategory(name), name);
     };
 
     handleDishesAllergenList = (name) => {
+        this[VIEW].updateBreadcrumb([
+            { name: 'Inicio', link: '#' },
+            { name: 'Alergénos', link: '#' },
+            { name: name }
+        ]);
         this[VIEW].displayDishesByAllergen(this[MODEL].getDishesWithAllergen(name), name);
     };
 
     handleDishesMenuList = (name) => {
+        this[VIEW].updateBreadcrumb([
+            { name: 'Inicio', link: '#' },
+            { name: 'Menus', link: '#' },
+            { name: name }
+        ]);
         this[VIEW].displayDishesByMenu(this[MODEL].getDishesWithMenu(name), name);
     };
 
     handleRestaurantList = (name) => {
+
+        this[VIEW].updateBreadcrumb([
+            { name: 'Inicio', link: '#' },
+            { name: 'Restaurantes', link: '#' },
+            { name: name }
+        ]);
 
         let restaurants = this[MODEL].getRestaurants();
 
         for (let restaurant of restaurants) {
             if (restaurant.name === name) {
                 this[VIEW].displayRestaurantInfo(restaurant);
-                return; 
+                return;
             }
         }
     };
 
     handleDishClick = (dishName) => {
-        let dish = [...this[MODEL].findDishes((dish) =>  dish.name === dishName)];
+        this[VIEW].updateBreadcrumb([
+            { name: 'Inicio', link: '#' },
+            { name: 'Plato', link: '#' },
+            { name: dishName }
+        ]);
+
+        let restaurants = this[MODEL].getRestaurants();
+
+        for (let restaurant of restaurants) {
+            if (restaurant.name === name) {
+                this[VIEW].displayRestaurantInfo(restaurant);
+                return;
+            }
+        }
+        let dish = [...this[MODEL].findDishes((dish) => dish.name === dishName)];
         if (dish.length > 0) {
             this[VIEW].displayDishInfo(dish[0]);
         } else {

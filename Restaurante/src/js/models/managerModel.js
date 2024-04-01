@@ -180,26 +180,22 @@ const managerModel = (function () {
             return this;
         }
 
-        //Assiganmos platos, categorias ...
         assignCategoryToDish(category, dish) {
 
             if (!(category instanceof Category)) throw ExceptionFactory.InvalidInstanceException('Category');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Si Category no existe, añádimos
             if (!this.#categories.has(category.name)) {
                 this.#categories.set(category.name, category);
             }
 
-            // Si Dish no existe, añádimos
             if (!this.#dishes.has(dish.name)) {
                 this.#dishes.set(dish.name, dish);
             }
 
-            // Añade la categoría al Map de categorías del plato
             dish.categories.set(category.name, category);
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         assignAllergenToDish(allergen, dish) {
@@ -207,20 +203,17 @@ const managerModel = (function () {
             if (!(allergen instanceof Allergen)) throw ExceptionFactory.InvalidInstanceException('Allergen');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Si el alérgeno no existe, lo añadimos al sistema
             if (!this.#allergens.has(allergen.name)) {
                 this.#allergens.set(allergen.name, allergen);
             }
 
-            // Si el plato no existe, lo añadimos al sistema
             if (!this.#dishes.has(dish.name)) {
                 this.#dishes.set(dish.name, dish);
             }
 
-            // Añade el alérgeno al Map de alérgenos del plato
             dish.allergens.set(allergen.name, allergen);
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         assignDishToMenu(menu, dish) {
@@ -228,17 +221,14 @@ const managerModel = (function () {
             if (!(menu instanceof Menu)) throw ExceptionFactory.InvalidInstanceException('Menu');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Si el Menu no existe, lo añadimos al sistema
             if (!this.#menus.has(menu.name)) {
                 this.#menus.set(menu.name, menu);
             }
 
-            // Si el Dish no existe, lo añadimos al sistema
             if (!this.#dishes.has(dish.name)) {
                 this.#dishes.set(dish.name, dish);
             }
 
-            // Añade el Dish al Map de dishes del Menu
             menu.dishes.set(dish.name, dish);
 
             return this;
@@ -250,7 +240,6 @@ const managerModel = (function () {
             if (!(category instanceof Category)) throw ExceptionFactory.InvalidInstanceException('Category');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Verificar si la categoría y el plato están registrados
             if (!this.#categories.has(category.name)) {
                 throw ExceptionFactory.NoExistValueException(category.name);
             }
@@ -258,10 +247,9 @@ const managerModel = (function () {
                 throw ExceptionFactory.NoExistValueException(dish.name);
             }
 
-            // Desasignar la categoría del plato
             dish.categories.delete(category.name);
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         deassignAllergenToDish(allergen, dish) {
@@ -269,7 +257,6 @@ const managerModel = (function () {
             if (!(allergen instanceof Allergen)) throw ExceptionFactory.InvalidInstanceException('Allergen');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Verificar si el alérgeno y el plato están registrados
             if (!this.#allergens.has(allergen.name)) {
                 throw ExceptionFactory.NoExistValueException(allergen.name);
             }
@@ -277,10 +264,9 @@ const managerModel = (function () {
                 throw ExceptionFactory.NoExistValueException(dish.name);
             }
 
-            // Desasignar el alérgeno del plato
             dish.allergens.delete(allergen.name);
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         deassignDishToMenu(menu, dish) {
@@ -288,7 +274,7 @@ const managerModel = (function () {
             if (!(menu instanceof Menu)) throw ExceptionFactory.InvalidInstanceException('Menu');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            // Verificar si el menú y el plato están registrados
+            
             if (!this.#menus.has(menu.name)) {
                 throw ExceptionFactory.NoExistValueException(menu.name);
             }
@@ -298,7 +284,7 @@ const managerModel = (function () {
 
             menu.dishes.delete(dish.name);
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         //cambiar posicion
@@ -311,7 +297,6 @@ const managerModel = (function () {
 
             if (!menu.dishes.has(dish1.name) || !menu.dishes.has(dish2.name)) throw new Error('Uno o ambos platos no están registrados en el menú.');
 
-            // Crear un nuevo Map temporal con los platos en el nuevo orden
             let newDishes = new Map();
 
             for (const [key, value] of menu.dishes.entries()) {
@@ -325,10 +310,9 @@ const managerModel = (function () {
                 }
             }
 
-            // Reemplazar el Map antiguo con el nuevo
             menu.dishes = newDishes;
 
-            return this; // Permitir encadenamiento
+            return this; 
         }
 
         //Busqueda
@@ -381,10 +365,8 @@ const managerModel = (function () {
 
             if (!name) { throw ExceptionFactory.EmptyValueException('name'); }
 
-            // Verificar si el plato ya existe
             if (this.#dishes.has(name)) { return this.#dishes.get(name); }
 
-            // Crear un nuevo plato si no existe
             let newDish = new Dish(name, description, ingredients, image, categories, allergens);
             this.#dishes.set(name, newDish);
 
