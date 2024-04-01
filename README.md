@@ -9,5 +9,5 @@ El proyecto Restaurante SPA es una aplicación web que permite a los usuarios na
 - **Consulta de Menús y Restaurantes:** Los usuarios pueden acceder a diferentes menús ofrecidos y obtener información sobre los restaurantes, incluyendo su ubicación.
 
 ## Notas
-La parte de Breadcrumb (Migas de Pan) dado la logia de como he hecho mi página SPA no logra a tener mucho sentido, pero al menos la agrego por si un futuro iremos añadiendo funcionalidades
+La parte de Breadcrumb (Migas de Pan) dado la lógica de como he hecho mi página SPA no logra tener mucho sentido, pero al menos la agrego por si un futuro iremos añadiendo funcionalidades
 
