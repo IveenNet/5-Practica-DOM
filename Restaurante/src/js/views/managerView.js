@@ -2,16 +2,37 @@
 
 class ManagerView {
     constructor() {
-        this.categoriesContainer = $('.category-container'); // Contenedor para las categorías
+        this.categoriesContainer = $('.category-container'); 
         this.menusContainer = $('.menu-container');
-        this.dishesContainer = $('.random-dishes-container'); // Contenedor para platos aleatorios
-        this.restaurantContainer = $('.restaurant-container'); // Contenedor para platos aleatorios
+        this.dishesContainer = $('.random-dishes-container'); 
+        this.restaurantContainer = $('.restaurant-container');
+        
+        this.breadcrumbContainer = $('#breadcrumb');
     }
 
     init(categories, menus, dishes) {
         this.displayCategories(categories);
         this.displayMenus(menus)
         this.displayRandomDishes(dishes);
+
+        this.updateBreadcrumb([{ name: 'Inicio', link: '#' }]);
+    }
+
+    updateBreadcrumb(path) {
+        this.breadcrumbContainer.empty(); // Limpia el contenedor de migas de pan
+
+        path.forEach((crumb, index) => {
+            const li = $('<li>').addClass('breadcrumb-item');
+            if (index < path.length - 1) {
+                // Si no es el último elemento, es un enlace clickeable
+                const a = $('<a>').attr('href', crumb.link).text(crumb.name);
+                li.append(a);
+            } else {
+                // El último elemento es el actual, no es un enlace
+                li.addClass('active').text(crumb.name);
+            }
+            this.breadcrumbContainer.append(li);
+        });
     }
 
     bindInit(handler) {
@@ -204,7 +225,7 @@ class ManagerView {
         $('<h2>').text(restaurant.name).appendTo(restaurantInfo);
         $('<p>').text(restaurant.description).appendTo(restaurantInfo);
 
-        // Verificar si se proporciona la ubicación
+        // Verificar si tenemos la ubicación
         if (restaurant.location) {
             $('<h3>').text('Ubicación').appendTo(restaurantInfo);
             $('<p>').text(`Latitud: ${restaurant.location.latitude}, Longitud: ${restaurant.location.longitude}`).appendTo(restaurantInfo);
