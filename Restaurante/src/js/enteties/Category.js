@@ -1,5 +1,7 @@
 'use strict';
 
+import {ExceptionFactory} from "../exceptions/Exceptions.js";
+
 class Category {
     
     #name;
@@ -39,3 +41,5 @@ class Category {
 
 Object.defineProperty(Category.prototype, 'name', { enumerable: true });
 Object.defineProperty(Category.prototype, 'name', { enumerable: true });
+
+export {Category};

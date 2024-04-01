@@ -1,5 +1,7 @@
 'use strict';
 
+import {ExceptionFactory} from "../exceptions/Exceptions.js";
+
 class Menu {
 
   #name;
@@ -47,3 +49,5 @@ class Menu {
 Object.defineProperty(Menu.prototype, 'name', { enumerable: true });
 Object.defineProperty(Menu.prototype, 'description', { enumerable: true });
 Object.defineProperty(Menu.prototype, 'dishes', { enumerable: true });
+
+export {Menu};
