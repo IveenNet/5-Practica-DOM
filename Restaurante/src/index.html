@@ -1,57 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Restaurante SPA</title>
     <link rel="stylesheet" href="./css/style.css" />
-</head>
 
-<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+  </head>
+
+  <body>
     <header>
-        <h1>Restaurante SPA</h1>
-        <nav id="main-menu">
-            <ul>
-                <li><a href="#" id="home-link">Inicio</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Categorías</a>
-                    <div class="dropdown-content" id="category-links"></div>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Alégenos</a>
-                    <div class="dropdown-content" id="allergen-links"></div>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Menús</a>
-                    <div class="dropdown-content" id="menu-links"></div>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Restaurantes</a>
-                    <div class="dropdown-content" id="restaurant-links"></div>
-                </li>
-            </ul>
-        </nav>
+      <h1>Restaurante SPA</h1>
+      <nav id="main-menu">
+        <ul>
+          <li><a href="#" id="home-link">Inicio</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Categorías</a>
+            <div class="dropdown-content" id="category-links"></div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Alégenos</a>
+            <div class="dropdown-content" id="allergen-links"></div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Menús</a>
+            <div class="dropdown-content" id="menu-links"></div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Restaurantes</a>
+            <div class="dropdown-content" id="restaurant-links"></div>
+          </li>
+        </ul>
+      </nav>
     </header>
 
-    
-
     <main id="content">
-        <section class="category-container grid"></section>
-        <section class="menu-container grid"></section>
-        <nav aria-label="breadcrumb">
-            <ol id="breadcrumb" class="breadcrumb">
-            </ol>
-        </nav>
-        <section class="random-dishes-container grid"></section>
-        <section class="restaurant-container"></section>
+      <section class="category-container grid"></section>
+      <section class="menu-container grid"></section>
+      <nav aria-label="breadcrumb">
+        <ol id="breadcrumb" class="breadcrumb"></ol>
+      </nav>
+      <section class="random-dishes-container grid"></section>
+      <section class="restaurant-container"></section>
+
+      <section id="form-selection">
+        <h2>Gestión de Contenidos</h2>
+        <ul>
+          <li>
+            <button type="button" class="form-btn" data-form="create-dish">
+              Crear Plato
+            </button>
+          </li>
+          <li>
+            <button type="button" class="form-btn" data-form="delete-dish">
+              Eliminar Plato
+            </button>
+          </li>
+          <li>
+            <button type="button" class="form-btn" data-form="assign-dish">
+              Asignar Platos a Menús
+            </button>
+          </li>
+          <li>
+            <button type="button" class="form-btn" data-form="add-category">
+              Crear Categoría
+            </button>
+          </li>
+          <li>
+            <button type="button" class="form-btn" data-form="delete-category">
+              Eliminar Categoría
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="form-btn"
+              data-form="create-restaurant"
+            >
+              Crear Restaurante
+            </button>
+          </li>
+          <li>
+            <button type="button" class="form-btn" data-form="modify-category">
+              Modificar Categorías de Plato
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section id="form-container"></section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Restaurante SPA</p>
+      <p>&copy; 2024 Restaurante SPA</p>
     </footer>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="./js/exceptions/Exceptions.js" type="module"></script>
     <script src="./js/enteties/Allergen.js" type="module"></script>
     <script src="./js/enteties/Category.js" type="module"></script>
@@ -64,6 +111,5 @@
     <script src="./js/views/managerView.js" type="module"></script>
     <script src="./js/managerApp.js" type="module"></script>
     <!--<script src="./tests/test.js" type="module"></script>-->
-</body>
-
+  </body>
 </html>

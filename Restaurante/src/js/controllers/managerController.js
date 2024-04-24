@@ -29,6 +29,17 @@ class managerController {
         this[VIEW].bindMenuClick(this.handleDishesMenuList);
         this[VIEW].bindRestaurantClick(this.handleRestaurantList);
         this[VIEW].bindDishClick(this.handleDishClick);
+        this[VIEW].bindCreateDishForm(this.handleCreateDishForm);
+        this[VIEW].bindDeleteDishForm(this.handleDeleteDish);
+        this[VIEW].bindCreateCategoryForm(this.handleCreateCategory);
+        this[VIEW].bindDeleteCategoryForm(this.handleDeleteCategory);
+        this[VIEW].bindCreateRestaurantForm(this.handleCreateRestaurant);
+        this[VIEW].bindModifyDishCategoryForm(this.handleModifyDishCategories);
+        this[VIEW].bindManageMenuForm(this.handleManageMenuForm);
+
+        //Saber en que display estamos
+        this.currentDisplayType = null;
+        this.currentDisplayKey = null;
     }
 
     [LOAD_MANAGER_OBJECTS]() {
@@ -87,17 +98,17 @@ class managerController {
 
         platosEntrantes.forEach(plato => {
             this[MODEL].addDish(plato);
-            this[MODEL].assignCategoryToDish(categoriaEntrantes, plato);
+            this[MODEL].assignCategoryToDish([categoriaEntrantes.name], plato);
         });
 
         platosPrincipales.forEach(plato => {
             this[MODEL].addDish(plato);
-            this[MODEL].assignCategoryToDish(categoriaPrincipales, plato);
+            this[MODEL].assignCategoryToDish([categoriaPrincipales.name], plato);
         });
 
         platosPostres.forEach(plato => {
             this[MODEL].addDish(plato);
-            this[MODEL].assignCategoryToDish(categoriaPostres, plato);
+            this[MODEL].assignCategoryToDish([categoriaPostres.name], plato);
         });
 
         [gazpacho, paella, bruschetta, pizzaMargherita, ensaladaCaprese].forEach(plato => this[MODEL].assignAllergenToDish(alergenoGluten, plato));
@@ -106,9 +117,9 @@ class managerController {
         [ensaladaCaprese, corderoAsado, bruschetta, flan, tiramisu].forEach(plato => this[MODEL].assignAllergenToDish(alergenoMariscos, plato));
 
         this[MODEL].addMenu(menuChef, menuTradicional, menuVegetariano);
-        [gazpacho, paella, tiramisu].forEach(plato => this[MODEL].assignDishToMenu(menuChef, plato));
-        [bruschetta, corderoAsado, flan].forEach(plato => this[MODEL].assignDishToMenu(menuTradicional, plato));
-        [ensaladaCaprese, pizzaMargherita, pastelDeZanahoria].forEach(plato => this[MODEL].assignDishToMenu(menuVegetariano, plato));
+        [gazpacho, paella, tiramisu].forEach(plato => this[MODEL].assignDishToMenu(menuChef, [plato.name]));
+        [bruschetta, corderoAsado, flan].forEach(plato => this[MODEL].assignDishToMenu(menuTradicional, [plato.name]));
+        [ensaladaCaprese, pizzaMargherita, pastelDeZanahoria].forEach(plato => this[MODEL].assignDishToMenu(menuVegetariano, [plato.name]));
 
         this[MODEL].addRestaurant(restaurant1, restaurant2, restaurant3);
     }
@@ -119,10 +130,10 @@ class managerController {
         this[VIEW].displayAllergenMenu(this[MODEL].getAllergens())
         this[VIEW].displayMenusMenu(this[MODEL].getMenus())
         this[VIEW].displayRestaurantMenu(this[MODEL].getRestaurants())
+        this[VIEW].displayCreateDishForm(this[MODEL].getCategories(), this[MODEL].getAllergens());
     };
 
     getRandomDishes(dishes, count) {
-        // Mezcla el array de platos y corta los primeros "count" platos
         const shuffled = dishes.sort(() => 0.5 - Math.random());
         return shuffled.slice(0, count);
     }
@@ -131,6 +142,14 @@ class managerController {
         let dishes = Array.from(this[MODEL].getDishes());
         let randomDishes = this.getRandomDishes(dishes, 3);
         this[VIEW].init(this[MODEL].getCategories(), this[MODEL].getMenus(), randomDishes);
+        this[VIEW].bindFormButtons(
+            () => Array.from(this[MODEL].getDishes()),
+            () => Array.from(this[MODEL].getCategories()),
+            () => Array.from(this[MODEL].getAllergens()),
+            () => Array.from(this[MODEL].getMenus())
+        );
+        this.currentDisplayType = null;
+        this.currentDisplayKey = null;
     };
 
     handleInit = () => {
@@ -138,17 +157,20 @@ class managerController {
     };
 
     handleDishesCategoryList = (name) => {
-
+        this.currentDisplayType = 'category';
+        this.currentDisplayKey = name;
         this[VIEW].updateBreadcrumb([
             { name: 'Inicio', link: '#' },
             { name: 'Categorías', link: '#categorias' },
             { name: name }
         ]);
-
-        this[VIEW].displayDishesByCategory(this[MODEL].getDishesInCategory(name), name);
+        let dishes = Array.from(this[MODEL].getDishesInCategory(name));
+        this[VIEW].displayDishesByCategory(dishes, name);
     };
 
     handleDishesAllergenList = (name) => {
+        this.currentDisplayType = 'allergen';
+        this.currentDisplayKey = name;
         this[VIEW].updateBreadcrumb([
             { name: 'Inicio', link: '#' },
             { name: 'Alergénos', link: '#' },
@@ -158,6 +180,8 @@ class managerController {
     };
 
     handleDishesMenuList = (name) => {
+        this.currentDisplayType = 'menu';
+        this.currentDisplayKey = name;
         this[VIEW].updateBreadcrumb([
             { name: 'Inicio', link: '#' },
             { name: 'Menus', link: '#' },
@@ -167,7 +191,8 @@ class managerController {
     };
 
     handleRestaurantList = (name) => {
-
+        this.currentDisplayType = 'restaurant';
+        this.currentDisplayKey = name;
         this[VIEW].updateBreadcrumb([
             { name: 'Inicio', link: '#' },
             { name: 'Restaurantes', link: '#' },
@@ -185,6 +210,8 @@ class managerController {
     };
 
     handleDishClick = (dishName) => {
+        this.currentDisplayType = 'dish';
+        this.currentDisplayKey = dishName;
         this[VIEW].updateBreadcrumb([
             { name: 'Inicio', link: '#' },
             { name: 'Plato', link: '#' },
@@ -206,6 +233,173 @@ class managerController {
             console.error(`No se encontró el plato con el nombre "${dishName}"`);
         }
     };
+
+    handleCreateDishForm = (dishData) => {
+        try {
+            let newDish = this[MODEL].createDish(
+                dishData.name,
+                dishData.description,
+                new Map(),
+                dishData.image,
+                new Map(),
+                new Map()
+            );
+    
+            if (newDish) {
+                this[MODEL].assignCategoryToDish(dishData.category, newDish);
+    
+                dishData.allergens.forEach(allergenName => {
+                    this[MODEL].assignAllergenToDish(allergenName, newDish);
+                });
+    
+                this[VIEW].resetForm();
+                this.refreshDishesDisplay();
+                this[VIEW].displaySuccessMessage('Plato creado con éxito');
+            } else {
+                this[VIEW].displayErrorMessage(`El plato ${dishData.name} ya existe`);
+            }
+    
+        } catch (error) {
+            this[VIEW].displayErrorMessage('Error al crear el plato: ' + error.message);
+        }
+    };
+
+    handleDeleteDish = (dishName) => {
+        try {
+
+            this[MODEL].removeDish(dishName);
+
+            this[VIEW].resetForm();
+            this[VIEW].displayDeleteDishForm(Array.from(this[MODEL].getDishes()));
+
+            this.refreshDishesDisplay();
+
+            this[VIEW].displaySuccessMessage('Plato eliminado correctamente.');
+
+        } catch (error) {
+
+            this[VIEW].displayErrorMessage('Error al eliminar el plato: ' + error.message);
+        }
+
+    };
+
+    refreshDishesDisplay = () => {
+
+        if (this.currentDisplayType && this.currentDisplayKey) {
+
+            switch (this.currentDisplayType) {
+                case 'category':
+                    this[VIEW].displayDishesByCategory(this[MODEL].getDishesInCategory(this.currentDisplayKey), this.currentDisplayKey);
+                    break;
+                case 'menu':
+                    this[VIEW].displayDishesByMenu(this[MODEL].getDishesWithMenu(this.currentDisplayKey), this.currentDisplayKey);
+                    break;
+                case 'allergen':
+                    this[VIEW].displayDishesByAllergen(this[MODEL].getDishesWithAllergen(this.currentDisplayKey), this.currentDisplayKey);
+                    break;
+                default:
+                    console.warn('Unknown display type:', this.currentDisplayType);
+            }
+        }
+    };
+
+    handleCreateCategory = (categoryData) => {
+
+        try {
+            this[MODEL].addCategory(new Category(categoryData.name, categoryData.description));
+            this[VIEW].displaySuccessMessage(`Categoría ${categoryData.name} creada con éxito.`);
+            this.refreshCategoriesView();
+            this[VIEW].resetForm();
+        } catch (error) {
+            this[VIEW].displayErrorMessage('Error al crear la categoría: ' + error.message);
+        }
+
+    };
+
+    handleDeleteCategory = (categoryName) => {
+
+        try {
+            this[MODEL].removeCategory(categoryName);
+            this[VIEW].displaySuccessMessage('Categoría eliminada con éxito.');
+
+            if (this.currentDisplayKey === categoryName) {
+
+                this[VIEW].displayRandomDishes(this.getRandomDishes(Array.from(this[MODEL].getDishes()), 3));
+
+            }
+
+            this.refreshCategoriesView();
+            this[VIEW].displayDeleteCategoryForm(Array.from(this[MODEL].getCategories()));
+
+        } catch (error) {
+            this[VIEW].displayErrorMessage('Error al eliminar la categoría: ' + error.message);
+        }
+    };
+
+    refreshCategoriesView = () => {
+        const categories = Array.from(this[MODEL].getCategories());
+        this[VIEW].displayCategoriesMenu(categories);
+        this[VIEW].displayCategories(categories);
+    };
+
+    handleCreateRestaurant = (restaurantData) => {
+
+        try {
+
+            this[MODEL].createRestaurant(
+                restaurantData.name,
+                restaurantData.description,
+                restaurantData.location
+            );
+
+            this[VIEW].displayRestaurantMenu(Array.from(this[MODEL].getRestaurants()));
+            this[VIEW].displaySuccessMessage('Restaurante creado con éxito.');
+
+            this[VIEW].resetForm();
+        } catch (error) {
+
+            this[VIEW].displayErrorMessage('Error al crear el restaurante: ' + error.message);
+        }
+    }
+
+    handleModifyDishCategories = (formData) => {
+        try {
+
+            const dishIterator = this[MODEL].findDishes(dish => dish.name === formData.dishName);
+            const dish = Array.from(dishIterator)[0];
+
+            dish.categories.clear();
+
+            this[MODEL].assignCategoryToDish(formData.categoryNames, dish);
+
+            this.refreshDishesDisplay();
+
+            this[VIEW].displaySuccessMessage('Categorías actualizadas con éxito.');
+        } catch (error) {
+            this[VIEW].displayErrorMessage('Error al modificar las categorías del plato: ' + error.message);
+        }
+    }
+
+    handleManageMenuForm = (selectedMenuName, selectedDishes) => {
+        try {
+
+            let menu = this[MODEL].getMenus().find(m => m.name === selectedMenuName);
+
+            menu.dishes.clear();
+
+            this[MODEL].assignDishToMenu(menu, selectedDishes);
+
+            this.refreshDishesDisplay();
+
+            this[VIEW].displaySuccessMessage('Menú actualizado correctamente con orden de platos.');
+
+        } catch (error) {
+
+            this[VIEW].displayErrorMessage('Error al actualizar el menú: ' + error.message);
+
+        }
+
+    }
 }
 
 export default managerController;
