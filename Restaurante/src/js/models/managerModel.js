@@ -2,6 +2,7 @@
 
 import { Allergen } from "../enteties/Allergen.js";
 import { Category } from "../enteties/Category.js";
+import { Coordinate } from "../enteties/Coordinate.js";
 import { Dish } from "../enteties/Dish.js";
 import { Menu } from "../enteties/Menu.js";
 import { Restaurant } from "../enteties/Restaurant.js";
@@ -31,34 +32,24 @@ const managerModel = (function () {
         }
 
         //Getters
-        * getDishes() {
-            for (const d of this.#dishes.values()) {
-                yield d;
-            }
+        getDishes() {
+            return Array.from(this.#dishes.values());
         }
 
-        * getCategories() {
-            for (const c of this.#categories.values()) {
-                yield c;
-            }
+        getCategories() {
+            return Array.from(this.#categories.values());
         }
 
-        * getMenus() {
-            for (const m of this.#menus.values()) {
-                yield m;
-            }
+        getMenus() {
+            return Array.from(this.#menus.values());
         }
 
-        * getAllergens() {
-            for (const a of this.#allergens.values()) {
-                yield a;
-            }
+        getAllergens() {
+            return Array.from(this.#allergens.values());
         }
 
-        * getRestaurants() {
-            for (const r of this.#restaurants.values()) {
-                yield r;
-            }
+        getRestaurants() {
+            return Array.from(this.#restaurants.values());
         }
 
         //Add
@@ -102,7 +93,6 @@ const managerModel = (function () {
                 if (this.#dishes.has(dish.name)) throw ExceptionFactory.ExistValueException(dish.name);
                 this.#dishes.set(dish.name, dish);
             });
-
             return this;
         }
 
@@ -119,18 +109,31 @@ const managerModel = (function () {
         //remove
 
         removeCategory(category) {
+            let categoryName;
 
-            if (!(category instanceof Category)) throw ExceptionFactory.InvalidInstanceException('Category');
-            if (this.#categories.has(category.name)) throw ExceptionFactory.NoExistValueException(category.name);
+            if (category instanceof Category) {
+                categoryName = category.name;
+            } else if (typeof category === 'string') {
+                categoryName = category;
+            } else {
+                throw ExceptionFactory.InvalidInstanceException('Category or Category name');
+            }
 
-            this.#categories.delete(category.name);
+            if (!this.#categories.has(categoryName)) {
+                throw ExceptionFactory.NoExistValueException(categoryName);
+            }
+
+            this.#categories.delete(categoryName);
 
             this.#dishes.forEach(dish => {
-                dish.categories = dish.categories.filter(cat => cat.name !== category.name);
+                if (dish.categories.has(categoryName)) {
+                    dish.categories.delete(categoryName);
+                }
             });
 
             return this;
         }
+
 
         removeAllergen(allergen) {
 
@@ -148,14 +151,31 @@ const managerModel = (function () {
 
         removeDish(dish) {
 
-            if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
-            if (!this.#dishes.has(dish.name)) throw ExceptionFactory.NoExistValueException(dish.name);
+            let dishName;
 
+            // Verificar si 'dish' es una instancia de Dish o un string
+            if (dish instanceof Dish) {
+                dishName = dish.name;
+            } else if (typeof dish === 'string') {
+                dishName = dish;
+            } else {
+                throw ExceptionFactory.InvalidInstanceException('Dish or Dish name');
+            }
+
+            // Verificar si el plato existe
+            if (!this.#dishes.has(dishName)) {
+                throw ExceptionFactory.NoExistValueException(dishName);
+            }
+
+            // Eliminar el plato de todos los menús
             this.#menus.forEach(menu => {
-                menu.dishes = menu.dishes.filter(menuDish => menuDish.name !== dish.name);
+                if (menu.dishes.has(dishName)) {
+                    menu.dishes.delete(dishName);
+                }
             });
 
-            this.#dishes.delete(dish.name);
+            // Eliminar el plato del mapa de platos
+            this.#dishes.delete(dishName);
 
             return this;
         }
@@ -180,31 +200,39 @@ const managerModel = (function () {
             return this;
         }
 
-        assignCategoryToDish(category, dish) {
-
-            if (!(category instanceof Category)) throw ExceptionFactory.InvalidInstanceException('Category');
-            if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
-
-            if (!this.#categories.has(category.name)) {
-                this.#categories.set(category.name, category);
+        assignCategoryToDish(categories, dish) {
+            if (typeof dish === 'string') {
+                if (!this.#dishes.has(dish)) {
+                    throw new Error(`No existe un plato con el nombre ${dish}`);
+                }
+                dish = this.#dishes.get(dish);
+            } else if (!(dish instanceof Dish)) {
+                throw ExceptionFactory.InvalidInstanceException('Dish');
             }
 
-            if (!this.#dishes.has(dish.name)) {
-                this.#dishes.set(dish.name, dish);
-            }
+            categories.forEach(categoryName => {
+                let category = this.#categories.get(categoryName);
+                if (!category) {
+                    throw new Error(`No existe una categoría con el nombre ${categoryName}`);
+                }
+                dish.categories.set(category.name, category);
+            });
 
-            dish.categories.set(category.name, category);
-
-            return this; 
+            return this;
         }
 
         assignAllergenToDish(allergen, dish) {
+            if (typeof allergen === 'string') {
+                if (!this.#allergens.has(allergen)) {
+                    throw new Error(`No existe un alérgeno con el nombre ${allergen}`);
+                }
+                allergen = this.#allergens.get(allergen);
+            } else if (!(allergen instanceof Allergen)) {
+                throw ExceptionFactory.InvalidInstanceException('Allergen');
+            }
 
-            if (!(allergen instanceof Allergen)) throw ExceptionFactory.InvalidInstanceException('Allergen');
-            if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
-
-            if (!this.#allergens.has(allergen.name)) {
-                this.#allergens.set(allergen.name, allergen);
+            if (!(dish instanceof Dish)) {
+                throw ExceptionFactory.InvalidInstanceException('Dish');
             }
 
             if (!this.#dishes.has(dish.name)) {
@@ -213,44 +241,65 @@ const managerModel = (function () {
 
             dish.allergens.set(allergen.name, allergen);
 
-            return this; 
+            return this;
         }
 
-        assignDishToMenu(menu, dish) {
 
+        assignDishToMenu(menu, dishNames) {
             if (!(menu instanceof Menu)) throw ExceptionFactory.InvalidInstanceException('Menu');
-            if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
+            if (!Array.isArray(dishNames)) throw new Error('dishNames must be an array of dish names');
 
             if (!this.#menus.has(menu.name)) {
                 this.#menus.set(menu.name, menu);
             }
 
-            if (!this.#dishes.has(dish.name)) {
-                this.#dishes.set(dish.name, dish);
-            }
-
-            menu.dishes.set(dish.name, dish);
+            dishNames.forEach(dishName => {
+                const dish = this.#dishes.get(dishName);
+                if (dish) {
+                    menu.dishes.set(dish.name, dish);
+                } else {
+                    console.warn(`Dish with name ${dishName} not found.`);
+                }
+            });
 
             return this;
         }
 
-        //Desasignar
-        deassignCategoryToDish(category, dish) {
 
-            if (!(category instanceof Category)) throw ExceptionFactory.InvalidInstanceException('Category');
-            if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
-
-            if (!this.#categories.has(category.name)) {
-                throw ExceptionFactory.NoExistValueException(category.name);
-            }
-            if (!this.#dishes.has(dish.name)) {
-                throw ExceptionFactory.NoExistValueException(dish.name);
+        deassignCategoryToDish(categories, dish) {
+            if (!Array.isArray(categories)) {
+                categories = [categories];
             }
 
-            dish.categories.delete(category.name);
+            if (typeof dish === 'string') {
+                if (!this.#dishes.has(dish)) {
+                    throw ExceptionFactory.NoExistValueException(dish);
+                }
+                dish = this.#dishes.get(dish);
+            } else if (!(dish instanceof Dish)) {
+                throw ExceptionFactory.InvalidInstanceException('Dish');
+            }
 
-            return this; 
+            categories.forEach(category => {
+                if (typeof category === 'string') {
+                    if (!this.#categories.has(category)) {
+                        throw ExceptionFactory.NoExistValueException(category);
+                    }
+                    category = this.#categories.get(category);
+                } else if (!(category instanceof Category)) {
+                    throw ExceptionFactory.InvalidInstanceException('Category');
+                }
+
+                if (dish.categories.has(category.name)) {
+                    dish.categories.delete(category.name);
+                } else {
+                    throw ExceptionFactory.NoExistValueException(`El plato no tiene la categoría ${category.name}`);
+                }
+            });
+
+            return this;
         }
+
 
         deassignAllergenToDish(allergen, dish) {
 
@@ -266,7 +315,7 @@ const managerModel = (function () {
 
             dish.allergens.delete(allergen.name);
 
-            return this; 
+            return this;
         }
 
         deassignDishToMenu(menu, dish) {
@@ -274,7 +323,7 @@ const managerModel = (function () {
             if (!(menu instanceof Menu)) throw ExceptionFactory.InvalidInstanceException('Menu');
             if (!(dish instanceof Dish)) throw ExceptionFactory.InvalidInstanceException('Dish');
 
-            
+
             if (!this.#menus.has(menu.name)) {
                 throw ExceptionFactory.NoExistValueException(menu.name);
             }
@@ -284,7 +333,7 @@ const managerModel = (function () {
 
             menu.dishes.delete(dish.name);
 
-            return this; 
+            return this;
         }
 
         //cambiar posicion
@@ -312,7 +361,7 @@ const managerModel = (function () {
 
             menu.dishes = newDishes;
 
-            return this; 
+            return this;
         }
 
         //Busqueda
@@ -331,7 +380,7 @@ const managerModel = (function () {
 
             if (!allergen) { throw ExceptionFactory.EmptyValueException('allergen name'); }
 
-            for (const dish of this.#dishes.values()) {  
+            for (const dish of this.#dishes.values()) {
                 if (dish.allergens.has(allergen)) { yield dish; }
             }
 
@@ -344,7 +393,7 @@ const managerModel = (function () {
             let menuSel = this.#menus.get(menu);
 
             for (const dish of menuSel.dishes.values()) {
-                 yield dish;
+                yield dish;
             }
         }
 
@@ -359,17 +408,19 @@ const managerModel = (function () {
 
         }
 
-
         //Creates
         createDish(name, description = '', ingredients = new Map(), image = '', categories = new Map(), allergens = new Map()) {
-
-            if (!name) { throw ExceptionFactory.EmptyValueException('name'); }
-
-            if (this.#dishes.has(name)) { return this.#dishes.get(name); }
-
+            if (!name) {
+                throw ExceptionFactory.EmptyValueException('name');
+            }
+        
+            if (this.#dishes.has(name)) {
+                return undefined;
+            }
+        
             let newDish = new Dish(name, description, ingredients, image, categories, allergens);
             this.#dishes.set(name, newDish);
-
+        
             return newDish;
         }
 
@@ -413,8 +464,11 @@ const managerModel = (function () {
 
             if (this.#restaurants.has(name)) { return this.#restaurants.get(name); }
 
-            let newRestaurant = new Restaurant(name, description, location);
+            let newCoordinate = new Coordinate(location.latitude, location.longitude)
+            let newRestaurant = new Restaurant(name, description, newCoordinate);
+
             this.#restaurants.set(name, newRestaurant);
+
             return newRestaurant;
 
         }

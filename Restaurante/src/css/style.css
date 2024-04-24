@@ -1,20 +1,4 @@
-:root {
-    --primary-color: #a23e48;
-    --secondary-color: #811a21;
-    --text-color: #5a5a5a;
-    --background-color: #f9f9f9;
-    --light-color: #ffffff;
-    --muted-color: #dcdcdc;
-    --dark-color: #000000;
-    --font-family: 'Merriweather', serif;
-    --font-size-large: 2.5rem;
-    --font-size-medium: 1.2rem;
-    --font-size-small: 0.95rem;
-    --base-spacing: 1rem;
-    --large-spacing: 2rem;
-}
-
-/* Reset de estilos básicos */
+/* Reset de estilos básicos para mantener consistencia entre navegadores */
 *,
 *::before,
 *::after {
@@ -24,65 +8,60 @@
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: 'Merriweather', serif;
     line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--background-color);
+    color: #5a5a5a;
+    background-color: #f9f9f9;
 }
 
-/* Componentes y Estructura */
 header {
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    padding: var(--base-spacing) var(--large-spacing);
+    background-color: #a23e48;
+    color: #ffffff;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 header h1 {
-    font-size: var(--font-size-large);
-    margin: 0;
-}
-
-nav#main-menu ul,
-nav.breadcrumbs,
-.breadcrumb {
-    list-style-type: none;
-    padding: 0;
+    font-size: 2.5rem;
     margin: 0;
 }
 
 nav#main-menu ul {
+    list-style-type: none;
     display: flex;
 }
 
-nav#main-menu ul li a,
-.breadcrumb-item a {
-    color: var(--light-color);
+nav#main-menu ul li a {
+    color: #ffffff;
     text-decoration: none;
     padding: 0.5rem 1rem;
     transition: background-color 0.3s ease-in-out;
-    font-size: var(--font-size-small);
+    font-size: 1.1rem;
 }
 
 nav#main-menu ul li a:hover,
-nav#main-menu ul li a:focus,
-.breadcrumb-item a:hover {
-    background-color: var(--secondary-color);
+nav#main-menu ul li a:focus {
+    background-color: #811a21;
 }
 
 nav.breadcrumbs {
-    background-color: var(--muted-color);
-    padding: var(--base-spacing) var(--large-spacing);
-    font-size: var(--font-size-small);
+    background-color: #dcdcdc;
+    padding: 0.75rem 2rem;
+    font-size: 0.95rem;
 }
 
 main#content {
-    padding: var(--large-spacing);
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+main#content h2 {
+    width: 100%;
+    text-align: left;
 }
 
 .category-container,
@@ -92,16 +71,16 @@ main#content {
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 1.5rem;
-    margin-bottom: var(--large-spacing);
+    margin-bottom: 2rem;
 }
 
-/* Elementos Específicos */
 .grid-item {
-    background-color: var(--light-color);
-    padding: var(--base-spacing);
+    background-color: #fff;
+    padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: calc(30% - 1rem);
+    /* Ajustar al tamaño deseado, menos el gap */
     margin: 0.5rem;
     cursor: pointer;
     transition: box-shadow 0.3s, transform 0.3s;
@@ -113,51 +92,374 @@ main#content {
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
+
 .grid-item img {
     width: 100%;
+    /* O un tamaño fijo como 200px */
     height: 150px;
+    /* O cualquier altura que desees para todas las imágenes */
     object-fit: cover;
+    /* Asegúrate de que la imagen cubra el área designada */
     border-radius: 5px;
+    /* O lo que prefieras para las esquinas redondeadas */
 }
 
 .grid-item .dish-name {
     margin-top: 0.5rem;
-    font-size: var(--font-size-medium);
+    /* Asegura un poco de espacio entre la imagen y el texto */
+    font-size: 1.2rem;
+    /* O el tamaño que prefieras */
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: var(--dark-color);
+    background-color: #5a5a5a;
     min-width: 160px;
-    box-shadow: 0 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
 .dropdown-content a {
-    color: var(--light-color);
+    color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: var(--text-color);
+    background-color: #5a5a5a;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
+
 footer {
-    background-color: var(--primary-color);
-    color: var(--light-color);
+    background-color: #a23e48;
+    color: #ffffff;
     text-align: center;
-    padding: var(--base-spacing) 0;
+    padding: 1rem 0;
     margin-top: auto;
 }
 
 footer p {
     margin: 0;
-    font-size: var(--font-size-small);
+    font-size: 1rem;
 }
+
+.dish-info {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 2rem 0;
+    max-width: 600px;
+}
+
+.dish-info h2 {
+    font-size: 2rem;
+    color: #a23e48;
+    margin-bottom: 1rem;
+}
+
+.dish-info p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.dish-info img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.dish-info ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+}
+
+.dish-info ul li {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.dish-info ul li:before {
+    content: "•";
+    /* Punto como bullet */
+    margin-right: 0.5rem;
+    color: #a23e48;
+    /* Color del punto */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dish-info {
+        padding: 1.5rem;
+    }
+
+    .dish-info h2 {
+        font-size: 1.8rem;
+    }
+
+    .dish-info p {
+        font-size: 1.1rem;
+    }
+
+    .dish-info ul li {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dish-info {
+        padding: 1rem;
+    }
+
+    .dish-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .dish-info p {
+        font-size: 1rem;
+    }
+
+    .dish-info ul li {
+        font-size: 1rem;
+    }
+}
+
+.restaurant-info {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.restaurant-info h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.restaurant-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.restaurant-info h3 {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.restaurant-info p.location {
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+
+/* Estilos para las migas de pan */
+.breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    /* 14px */
+}
+
+.breadcrumb-item {
+    display: inline-block;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    content: "/\00a0";
+    /* Inserta un slash seguido de un espacio */
+    padding: 0 5px;
+    color: #6c757d;
+}
+
+.breadcrumb-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Si deseas añadir más estilos, como cambios de color al hacer hover o activar un enlace, puedes agregarlos aquí. Por ejemplo: */
+.breadcrumb-item a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+#form-selection {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+#form-selection h2 {
+    margin-bottom: 1rem;
+}
+
+#form-selection ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex; /* Cambiar a flexbox */
+    justify-content: center; /* Centrar los elementos horizontalmente */
+}
+
+#form-selection li {
+    margin-bottom: 0.5rem;
+    margin-right: 1rem; /* Espacio entre elementos */
+}
+
+.form-btn {
+    padding: 0.5rem 1rem;
+    background-color: #a23e48;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-btn:hover {
+    background-color: #811a21;
+}
+
+#form-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos generales para formularios */
+.form-style {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.form-style label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.form-style input[type="text"],
+.form-style input[type="file"],
+.form-style select,
+.form-style textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluye padding y border en el width/height */
+    margin-bottom: 20px;
+}
+
+.form-style textarea {
+    resize: vertical; /* Permite al usuario cambiar el tamaño verticalmente */
+}
+
+.form-style button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #a23e48;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-style button:hover {
+    background-color: #811a21;
+}
+
+/* Ajuste de los márgenes para br */
+.form-style br {
+    display: none;
+}/* Estilo base para checkbox personalizado */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 35px; /* Espacio para la caja de checkbox personalizada */
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 18px; /* Ajusta al tamaño de texto deseado */
+    user-select: none;
+  }
+  
+ 
+  /* Crea una caja de checkbox personalizada */
+  .custom-checkbox .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+  }
+  
+  /* Estilo cuando el checkbox está marcado */
+  .custom-checkbox input:checked ~ .checkmark {
+    background-color: #a23e48;
+  }
+  
+  /* Estilo del indicador de checkmark (la marca dentro del checkbox) */
+  .custom-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Muestra el checkmark cuando el checkbox está marcado */
+  .custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Estilo del checkmark */
+  .custom-checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 8px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  /* Asegúrate de que los estilos de los labels estén reseteados para que no afecten a tu diseño */
+  .custom-checkbox label {
+    margin-left: 8px;
+    display: block;
+  }
+  
